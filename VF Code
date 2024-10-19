@@ -1,0 +1,31 @@
+<apex:page controller="CreateInvoiceController">
+    <apex:form >
+        <apex:pageMessages />
+        <apex:pageBlock title="Invoice Creation from URL Parameters">
+            <apex:pageBlockSection columns="2">
+                <apex:outputLabel value="Origin Record" />
+                <apex:outputText value="{!originRecord}"/>
+
+                <apex:outputLabel value="Account" />
+                <apex:outputText value="{!accountId}"/>
+
+                <apex:outputLabel value="Invoice Date" />
+                <apex:outputText value="{!invoiceDate}"/>
+
+                <apex:outputLabel value="Due Date" />
+                <apex:outputText value="{!invoiceDueDate}"/>
+
+                <apex:outputLabel value="Line Item Description" />
+                <apex:outputText value="{!lineItemDescription}"/>
+
+                <apex:outputLabel value="Quantity" />
+                <apex:outputText value="{!lineItemQuantity}"/>
+
+                <apex:outputLabel value="Unit Price" />
+                <apex:outputText value="{!lineItemUnitPrice}"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+
+        <apex:commandButton value="Create Invoice" action="{!createInvoice}" />
+    </apex:form>
+</apex:page>
