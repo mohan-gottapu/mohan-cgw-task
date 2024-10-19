@@ -1,0 +1,72 @@
+public class CreateInvoiceController {
+    
+    public String originRecord { get; set; }
+    public String accountId { get; set; }
+    public Date invoiceDate { get; set; }
+    public Date invoiceDueDate { get; set; }
+    public String lineItemDescription { get; set; }
+    public Decimal lineItemQuantity { get; set; }
+    public Decimal lineItemUnitPrice { get; set; }
+
+    public CreateInvoiceController() {
+        originRecord = ApexPages.currentPage().getParameters().get('origin_record');
+        accountId = ApexPages.currentPage().getParameters().get('account');
+        invoiceDate = Date.valueOf(ApexPages.currentPage().getParameters().get('invoice_date'));
+        invoiceDueDate = Date.valueOf(ApexPages.currentPage().getParameters().get('invoice_due_date'));
+        lineItemDescription = ApexPages.currentPage().getParameters().get('line_item_description');
+        lineItemQuantity = Decimal.valueOf(ApexPages.currentPage().getParameters().get('line_item_quantity'));
+        lineItemUnitPrice = Decimal.valueOf(ApexPages.currentPage().getParameters().get('line_item_unit_price'));
+    }
+    
+    public void createInvoice() {
+        Invoice__c newInvoice = new Invoice__c();
+        newInvoice.Account__c = accountId;
+        newInvoice.Invoice_Date__c = invoiceDate;
+        newInvoice.Due_Date__c = invoiceDueDate;
+        insert newInvoice;
+
+        Invoice_Line_Item__c newItem = new Invoice_Line_Item__c();
+        newItem.Invoice__c = newInvoice.Id;
+        newItem.Line_Description__c = lineItemDescription;
+        newItem.Quantity__c = lineItemQuantity;
+        newItem.Unit_Price__c = lineItemUnitPrice;
+        insert newItem;
+
+        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.CONFIRM, 'Invoice and Line Items created successfully.'));
+    }
+
+
+}
+
+
+<apex:page controller="CreateInvoiceController">
+    <apex:form >
+        <apex:pageMessages />
+        <apex:pageBlock title="Invoice Creation from URL Parameters">
+            <apex:pageBlockSection columns="2">
+                <apex:outputLabel value="Origin Record" />
+                <apex:outputText value="{!originRecord}"/>
+
+                <apex:outputLabel value="Account" />
+                <apex:outputText value="{!accountId}"/>
+
+                <apex:outputLabel value="Invoice Date" />
+                <apex:outputText value="{!invoiceDate}"/>
+
+                <apex:outputLabel value="Due Date" />
+                <apex:outputText value="{!invoiceDueDate}"/>
+
+                <apex:outputLabel value="Line Item Description" />
+                <apex:outputText value="{!lineItemDescription}"/>
+
+                <apex:outputLabel value="Quantity" />
+                <apex:outputText value="{!lineItemQuantity}"/>
+
+                <apex:outputLabel value="Unit Price" />
+                <apex:outputText value="{!lineItemUnitPrice}"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+
+        <apex:commandButton value="Create Invoice" action="{!createInvoice}" />
+    </apex:form>
+</apex:page>
